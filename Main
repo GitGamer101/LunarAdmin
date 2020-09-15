@@ -1,3 +1,5 @@
+print("Loaded")
+
 local plrs = game.Players:GetChildren()
 
 local http = game:GetService("HttpService")

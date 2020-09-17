@@ -1,5 +1,4 @@
-print("Loaded")
-
+rconsolename("Lunar Hub Dev Console")
 local plrs = game.Players:GetChildren()
 
 local http = game:GetService("HttpService")
@@ -7,78 +6,6 @@ local http = game:GetService("HttpService")
 local PService = game:GetService("Players")
 
 local prefix = ">"
-
-function writefileExists()
-    if writefile then
-        return true 
-    end
-end
-
-function writefileCooldown(name, data)
-   spawn(function()
-        if not cooldown then
-           cooldown = true
-           writefile(name, data)
-        else
-           repeat wait() until cooldown == false
-           writefileCooldown(name, data)
-        end
-        wait(3)
-        cooldown = false
-    end)
-end
-
-local defaultSettings = {
-    prefix = prefix;
-}
-
-local default = http:JSONEncode(defaultSettings)
-
-nosaves = false
-
-function saves()
-    if writefileExists() then
-        if pcall(function() readfile("Lunar_Settings.txt") end) then
-            if readfile("Lunar_Settings.txt") ~= nil then
-                local success, Error = pcall(function()
-                    local json = http:JSONDecode(readfile("Lunar_Settings.txt"))
-                    if json.prefix ~= nil then prefix = json.prefix else prefix = '>' end
-                end)
-                if not success then
-    				warn("Save Json Error:", Error)
-    				warn("Overwriting Save File")
-    				writefileCooldown("Lunar_Settings.txt", default)
-    				wait()
-    				saves()
-                end
-            else
-                writefileCooldown("Lunar_Settings.txt", default)
-                wait()
-                saves()
-		    end
-        else
-            writefileCooldown("Lunar_Settings.txt", default)
-            wait()
-            if pcall(function() readfile("Lunar_Settings.txt") end) then
-                saves()
-            else
-                nosaves = true
-                prefix = '>';
-            end
-        end
-    end
-end
-
-saves()
-
-function updatesaves()
-	if nosaves == false and writefileExists() then
-		local update = {
-			prefix = prefix;
-		}
-		writefileCooldown("Lunar_Settings.txt", http:JSONEncode(update))
-	end
-end
 
 local player = game.Players.LocalPlayer
 
@@ -89,8 +16,9 @@ end
 
 function findPlayer(target)
     for _,v in pairs(game.Players:GetPlayers()) do
-        if (string.match(string.lower(v.Name), string.lower(target))) then
-            print("Found Player: " .. v.Name)
+        rconsoleinfo("Player: " .. v.Name)
+        if (v.Name:lower():sub(1,#target) == target) then
+            rconsoleprint("Found Player: " .. v.Name .. "\n")
             return v.Name
         end
     end
@@ -98,8 +26,8 @@ function findPlayer(target)
 end
 
 function GrabRoot(char)
-    local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
-	return rootPart
+    local rP = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
+	return rP
 end
 
 for _,Speaker in pairs(plrs) do
@@ -107,30 +35,34 @@ for _,Speaker in pairs(plrs) do
        msg = string.lower(msg)
        if (Speaker == player) then
            if (msg:sub(1,1) == prefix) then
+               
+               
                if (string.lower(msg:sub(2,5)) == "goto") then
                    local user = msg:sub(7)
                    if (user ~= nil) then
                        local plr = findPlayer(user)
                        if (plr) then
-                           local char = PService[plr].Character
                            local hrp = GrabRoot(Speaker.Character)
-                           local hrp2 = GrabRoot(char)
-                           hrp = hrp2
+                           local hrp2 = GrabRoot(PService[plr].Character)
+                           message("Teleported!")
                         end
                     end
-                end
+               end
+            
+            
                 if (string.lower(msg:sub(2,7)) == "prefix") then
                    local newPrefix = msg:sub(9)
                    local characterCount = #newPrefix
                    if (characterCount >= 2) then
-                        warn("Too Many Prefix's!")
+                        message("WARNING: Too Many Prefix's!")
                    else
                         prefix = newPrefix
                         wait()
-                        print("Prefix Changed To: " .. prefix)
-                        updatesaves()
+                        message("Prefix Changed To: " .. prefix)
                    end
                 end
+                
+                
             end
         end
    end)

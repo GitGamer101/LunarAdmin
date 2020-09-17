@@ -1,4 +1,6 @@
+rconsoleclear()
 rconsolename("Lunar Hub Dev Console")
+rconsoleprint("Lunar Admin Started!")
 local plrs = game.Players:GetChildren()
 
 local http = game:GetService("HttpService")

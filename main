@@ -1,4 +1,3 @@
-print("started.")
 rconsoleclear()
 rconsolename("Lunar Hub Dev Console")
 rconsoleprint("Lunar Admin Started!")

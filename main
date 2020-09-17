@@ -1,6 +1,7 @@
 rconsoleclear()
 rconsolename("Lunar Hub Dev Console")
 rconsoleprint("Lunar Admin Started!")
+
 local plrs = game.Players:GetChildren()
 
 local http = game:GetService("HttpService")
@@ -44,8 +45,7 @@ for _,Speaker in pairs(plrs) do
                    if (user ~= nil) then
                        local plr = findPlayer(user)
                        if (plr) then
-                           local hrp = GrabRoot(Speaker.Character)
-                           local hrp2 = GrabRoot(PService[plr].Character)
+                           Speaker.Character.HumanoidRootPart.CFrame = PService[plr].Character.HumanoidRootPart.CFrame
                            message("Teleported!")
                         end
                     end
